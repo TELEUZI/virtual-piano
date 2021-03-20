@@ -75,18 +75,13 @@
                     }
                 }
             }
-
-
         })
         document.addEventListener('keyup', function(e) {
-
+            down = down.filter(el => el != e.code[e.code.length - 1]);
             var currentContainer = sharpLetters.includes(e.code[e.code.length - 1].toLowerCase()) ? keySharps : container;
             for (let element of currentContainer.children) {
                 if (element.dataset['letter'] == e.code[e.code.length - 1]) {
-                    down.pop()
                     element.classList.remove('piano-key-active', 'piano-key-active-pseudo');
-
-
                 }
             }
 
