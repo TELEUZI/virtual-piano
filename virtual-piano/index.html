@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/piano.ico" rel="shortcut icon">
+
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300&family=Open+Sans:wght@300;400;800&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <title>virtual-piano</title>
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header-title">Virtual Piano</h1>
+    </header>
+    <main class="main">
+        <div class="btn-container">
+            <button class="btn btn-notes btn-active">Notes</button>
+            <button class="btn btn-letters">Letters</button>
+        </div>
+        <div class="piano">
+            <div class="piano-key" data-letter="D" data-note="c"></div>
+            <div class="piano-key" data-letter="F" data-note="d"></div>
+            <div class="piano-key" data-letter="G" data-note="e"></div>
+            <div class="piano-key" data-letter="H" data-note="f"></div>
+            <div class="piano-key" data-letter="J" data-note="g"></div>
+            <div class="piano-key" data-letter="K" data-note="a"></div>
+            <div class="piano-key" data-letter="L" data-note="b"></div>
+            <div class="keys-sharp">
+                <div class="piano-key sharp" data-letter="R" data-note="c♯"></div>
+                <div class="piano-key sharp" data-letter="T" data-note="d♯"></div>
+                <div class="piano-key sharp none"></div>
+                <div class="piano-key sharp" data-letter="U" data-note="f♯"></div>
+                <div class="piano-key sharp" data-letter="I" data-note="g♯"></div>
+                <div class="piano-key sharp" data-letter="O" data-note="a♯"></div>
+            </div>
+
+        </div>
+        <button class="fullscreen openfullscreen"></button>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <a class="github" href="#" target="_blank" rel="noopener noreferrer">github</a>
+            <a class="rss" href="https://rs.school/js/" target="_blank" rel="noopener noreferrer">
+                <span class="rss-year">'21</span>
+            </a>
+        </div>
+    </footer>
+    <script>
+        let container = document.querySelector('.piano');
+        let keySharps = document.querySelector('.keys-sharp');
+        let sharpLetters = "rtuio";
+        let lettersButton = document.querySelector('.btn-letters');
+        let notesButton = document.querySelector('.btn-notes');
+        var down = [];
+        document.addEventListener('keydown', function(e) {
+            if (down.includes(e.code[e.code.length - 1])) return;
+            down.push(e.code[e.code.length - 1]);
+            const audio = new Audio();
+            var currentContainer = sharpLetters.includes(e.code[e.code.length - 1].toLowerCase()) ? keySharps : container;
+            for (let element of currentContainer.children) {
+                if (element.dataset['letter'] == e.code[e.code.length - 1]) {
+                    audio.src = `assets/audio/${element.dataset['note']}.mp3`;
+                    document.body.appendChild(audio);
+                    audio.play()
+                    element.classList.add('piano-key-active', 'piano-key-active-pseudo');
+                    audio.onended = function() {
+                        audio.remove();
+
+                    }
+                }
+            }
+
+
+        })
+        document.addEventListener('keyup', function(e) {
+
+            var currentContainer = sharpLetters.includes(e.code[e.code.length - 1].toLowerCase()) ? keySharps : container;
+            for (let element of currentContainer.children) {
+                if (element.dataset['letter'] == e.code[e.code.length - 1]) {
+                    down.pop()
+                    element.classList.remove('piano-key-active', 'piano-key-active-pseudo');
+
+
+                }
+            }
+
+        })
+        lettersButton.addEventListener('click', function(e) {
+            this.classList.add('btn-active')
+            container.classList.add('letter-piano')
+            notesButton.classList.remove('btn-active')
+        })
+        notesButton.addEventListener('click', function(e) {
+            this.classList.add('btn-active')
+            container.classList.remove('letter-piano');
+            lettersButton.classList.remove('btn-active')
+        })
+        container.addEventListener('mousedown', z);
+
+        function z(e) {
+            e.target.classList.add('piano-key-active', 'piano-key-active-pseudo');
+            var audio = document.createElement('audio');
+            audio.src = `assets/audio/${e.target.dataset['note'].toLocaleLowerCase()}.mp3`;
+            document.body.appendChild(audio);
+            audio.play();
+            for (let index = 0; index < this.children.length; index++) {
+                this.children[index].addEventListener('mouseover',
+                    t);
+
+            }
+            audio.onended = function() {
+
+                this.parentNode.removeChild(this);
+
+            }
+        }
+
+        document.addEventListener('mouseup', function(e) {
+            e.target.classList.remove('piano-key-active', 'piano-key-active-pseudo');
+            for (let index = 0; index < container.children.length; index++) {
+                container.children[index].removeEventListener('mouseover', t)
+
+            }
+        })
+
+        function t(e) {
+            audio = document.createElement('audio');
+            audio.src = `assets/audio/${e.target.dataset['note'].toLocaleLowerCase()}.mp3`;
+            document.body.appendChild(audio);
+            e.target.classList.add('piano-key-active', 'piano-key-active-pseudo');
+            audio.play();
+
+            audio.onended = function() {
+                this.parentNode.removeChild(this);
+
+            }
+            this.addEventListener('mouseout', function(e) {
+                e.target.classList.remove('piano-key-active', 'piano-key-active-pseudo');
+            })
+
+        }
+        document.addEventListener("keypress", function(e) {
+            if (e.keyCode === 122) {
+                toggleFullScreen();
+            }
+        }, false);
+        document.querySelector('.fullscreen').addEventListener("click", function(e) {
+            toggleFullScreen();
+
+        }, false);
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.querySelector('body').requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
