@@ -8,11 +8,11 @@ document.addEventListener("keypress", function(e) {
     if (e.code == 122) {
         toggleFullScreen();
     }
-}, false);
+});
 
 document.querySelector('.fullscreen').addEventListener("click", function(e) {
     toggleFullScreen();
-}, false);
+});
 
 document.addEventListener('keydown', function(e) {
     if (activeButtons.includes(e.code[e.code.length - 1])) return;
@@ -64,6 +64,7 @@ function mouseOutOrUpHandler(key) {
 }
 
 function mouseDownHandler(e) {
+    console.log(e);
     e.target.classList.add('piano-key-active', 'piano-key-active-pseudo');
     playNote(e.target.dataset.note.toLocaleLowerCase());
     for (let index = 0; index < this.children.length; index++) {

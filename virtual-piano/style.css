@@ -141,6 +141,10 @@ body {
     transform-origin: center top;
 }
 
+.piano-key.sharp:hover {
+    background-color: #252c31;
+}
+
 .piano-key.piano-key-active,
 .piano-key.sharp.piano-key-active {
     background-color: #000;
@@ -166,6 +170,7 @@ body {
     bottom: -45px;
     left: 20px;
     transition: 0.3s;
+    pointer-events: none;
 }
 
 .piano-key::after {
