@@ -64,7 +64,6 @@ function mouseOutOrUpHandler(key) {
 }
 
 function mouseDownHandler(e) {
-    console.log(e);
     e.target.classList.add('piano-key-active', 'piano-key-active-pseudo');
     playNote(e.target.dataset.note.toLocaleLowerCase());
     for (let index = 0; index < this.children.length; index++) {
