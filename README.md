@@ -1,2 +1,1 @@
-# teleuzi-JSFE2021Q1
-Private repository for @teleuzi
+Virtual piano with fullscreen feature on mobile and desktop.
